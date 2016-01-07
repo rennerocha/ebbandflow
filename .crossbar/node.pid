@@ -1,0 +1,17 @@
+{
+   "pid": 2294, 
+   "options": {
+      "reactor": null, 
+      "loglevel": "info", 
+      "logtofile": false, 
+      "logformat": "colour", 
+      "command": "start", 
+      "logdir": null, 
+      "config": "/home/rrocha/projects/feagri/.crossbar/config.json", 
+      "cbdir": "/home/rrocha/projects/feagri/.crossbar"
+   }, 
+   "argv": [
+      "/home/rrocha/.virtualenvs/feagri/bin/crossbar", 
+      "start"
+   ]
+}

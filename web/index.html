@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Ebb and Flow - Hydroponics</title>
+
+      <!-- Latest compiled and minified CSS -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+      <!-- Optional theme -->
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+      <!-- Latest compiled and minified JavaScript -->
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+   </head>
+   <body>
+      <div class="container">
+         <div class="row">
+            <div class="col-md-12">
+               <h1>Ebb and Flow</h1>
+            </div>
+         </div>
+
+         <div class="row">
+            <div class="col-md-3">
+               <caption>Mesa</caption>
+               <table class="table table-condensed">
+                  <tr>
+                     <td>Temperatura Solucao (C)</td>
+                     <td><span id="temperatura_solucao">25</span></td>
+                  </tr>
+                  <tr>
+                     <td>Umidade Substrato(%)</td>
+                     <td><span id="umidade_substrato">74</span></td>
+                  </tr>
+                  <tr class="success">
+                     <td colspan="2"><blink>Bomba Ligada</blink></td>
+                  </tr>
+                  <tr>
+                     <td>Set Point Umidade Substrato(%)</td>
+                     <td><span id="setpoint_umidade_substrato"><input type="text" size="2"></span></td>
+                  </tr>
+               </table>
+            </div>
+            <div class="col-md-9">
+               <div id="chartContainer2" style="height: 300px; width:100%;"></div>
+            </div>
+         </div>
+
+         <div class="row">
+            <div class="col-md-2">
+               <caption>Condi&ccedil;&otilde;es ambientais</caption>
+               <table class="table table-condensed">
+                  <tr>
+                     <td>Temperatura (C)</td>
+                     <td><span id="temperatura_ambiente">25</span></td>
+                  </tr>
+                  <tr>
+                     <td>Umidade (%)</td>
+                     <td><span id="umidade_ambiente">74</span></td>
+                  </tr>
+               </table>
+            </div>
+            <div class="col-md-3">
+               <div id="chartContainer" style="height: 300px; width:100%;"></div>
+            </div>
+
+            <div class="col-md-3">
+               <table class="table table-condensed">
+                  <thead>
+                     <th>#</th>
+                     <th>pH</th>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td>01/01/2015 15:30</td>
+                        <td>7.0</td>
+                     </tr>
+                     <tr>
+                        <td>02/01/2015 10:30</td>
+                        <td>7.0</td>
+                     </tr>
+                     <tr>
+                        <td>03/01/2015 17:30</td>
+                        <td>7.0</td>
+                     </tr>
+                     <tr>
+                        <td>05/01/2015 15:30</td>
+                        <td>7.0</td>
+                     </tr>
+                  </tbody>
+               </table>
+
+               <table class="table table-condensed">
+                  <tr>
+                     <td>Set Point pH</td>
+                     <td><span id="setpoint_ph"><input type="text" size="2"></span></td>
+                  </tr>
+                  <tr>
+                     <td colspan="2">
+                        <button type="button" class="btn btn-primary">Efetuar Leitura pH</button>
+                     </td>
+                  </tr>
+               </table>
+            </div>
+            <div class="col-md-4">
+               <div id="chartContainer3" style="height: 300px; width:100%;"></div>
+            </div>
+         </div>
+      </div>
+
+
+
+
+
+
+
+      
+
+      <script>AUTOBAHN_DEBUG = true;</script>
+      <script src="http://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+      <script src="canvasjs.min.js"></script>
+
+      <script>
+      var dps = []; // dataPoints
+
+      var chart = new CanvasJS.Chart("chartContainer",{
+         title :{
+            text: "Live Random Data"
+         },       
+         data: [{
+            type: "line",
+            dataPoints: dps 
+         }]
+      });
+
+      var chart2 = new CanvasJS.Chart("chartContainer2",{
+         title :{
+            text: "Live Random Data"
+         },       
+         data: [{
+            type: "line",
+            dataPoints: dps 
+         }]
+      });
+
+      var chart3 = new CanvasJS.Chart("chartContainer3",{
+         title :{
+            text: "Live Random Data"
+         },       
+         data: [{
+            type: "line",
+            dataPoints: dps 
+         }]
+      });
+
+      var xVal = 0;
+      var yVal = 100;   
+      var updateInterval = 100;
+      var dataLength = 500; // number of dataPoints visible at any point
+
+      var updateChart = function (x_val, y_val) {
+         // count = count || 1;
+         // // count is number of times loop runs to generate random dataPoints.
+         
+         // for (var j = 0; j < count; j++) {   
+         //    yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
+            dps.push({
+               x: x_val,
+               y: y_val
+            });
+         //    xVal++;
+         // };
+         if (dps.length > dataLength)
+         {
+            dps.shift();            
+         }
+         
+         chart.render();  
+         chart2.render();   
+         chart3.render();      
+
+      };
+
+         // generates first set of dataPoints
+         updateChart(0, 0); 
+
+         // the URL of the WAMP Router (Crossbar.io)
+         //
+         var wsuri;
+         if (document.location.origin == "file://") {
+            wsuri = "ws://127.0.0.1:8080/ws";
+         } else {
+            wsuri = (document.location.protocol === "http:" ? "ws:" : "wss:") + "//" +
+                        document.location.host + "/ws";
+         }
+
+         // the WAMP connection to the Router
+         //
+         var connection = new autobahn.Connection({
+            url: wsuri,
+            realm: "realm1"
+         });
+
+         // fired when connection is established and session attached
+         //
+         connection.onopen = function (session, details) {
+
+            console.log("Connected");
+            // SUBSCRIBE to a topic and receive events
+            //
+            function on_counter (args) {
+               var counter = args[0];
+               console.log("on_counter() event received with counter " + counter);
+            }
+            session.subscribe('com.example.oncounter', on_counter).then(
+               function (sub) {
+                  console.log('subscribed to topic');
+               },
+               function (err) {
+                  console.log('failed to subscribe to topic', err);
+               }
+            );
+
+
+         };
+
+         // var t1, t2;
+         // fired when connection was lost (or could not be established)
+         //
+         connection.onclose = function (reason, details) {
+            console.log("Connection lost: " + reason);
+            // if (t1) {
+            //    clearInterval(t1);
+            //    t1 = null;
+            // }
+            // if (t2) {
+            //    clearInterval(t2);
+            //    t2 = null;
+            // }
+         }
+
+
+         // now actually open the connection
+         //
+         connection.open();
+
+      </script>
+
+   </body>
+</html>
