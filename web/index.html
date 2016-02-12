@@ -3,12 +3,18 @@
    <head>
       <title>Ebb and Flow - Hydroponics</title>
 
-      <!-- Latest compiled and minified CSS -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-      <!-- Optional theme -->
+
+      <!-- Latest compiled and minified CSS -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-      <!-- Latest compiled and minified JavaScript -->
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.js"></script>
+
+      <!-- Optional theme -->
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+      <!-- Latest compiled and minified JavaScript -->
+
    </head>
    <body>
       <div class="container">
@@ -17,231 +23,231 @@
                <h1>Ebb and Flow</h1>
             </div>
          </div>
-
          <div class="row">
-            <div class="col-md-3">
-               <caption>Mesa</caption>
-               <table class="table table-condensed">
-                  <tr>
-                     <td>Temperatura Solucao (C)</td>
-                     <td><span id="temperatura_solucao">25</span></td>
-                  </tr>
-                  <tr>
-                     <td>Umidade Substrato(%)</td>
-                     <td><span id="umidade_substrato">74</span></td>
-                  </tr>
-                  <tr class="success">
-                     <td colspan="2"><blink>Bomba Ligada</blink></td>
-                  </tr>
-                  <tr>
-                     <td>Set Point Umidade Substrato(%)</td>
-                     <td><span id="setpoint_umidade_substrato"><input type="text" size="2"></span></td>
-                  </tr>
-               </table>
-            </div>
-            <div class="col-md-9">
-               <div id="chartContainer2" style="height: 300px; width:100%;"></div>
-            </div>
-         </div>
-
-         <div class="row">
-            <div class="col-md-2">
-               <caption>Condi&ccedil;&otilde;es ambientais</caption>
-               <table class="table table-condensed">
-                  <tr>
-                     <td>Temperatura (C)</td>
-                     <td><span id="temperatura_ambiente">25</span></td>
-                  </tr>
-                  <tr>
-                     <td>Umidade (%)</td>
-                     <td><span id="umidade_ambiente">74</span></td>
-                  </tr>
-               </table>
-            </div>
-            <div class="col-md-3">
-               <div id="chartContainer" style="height: 300px; width:100%;"></div>
-            </div>
-
-            <div class="col-md-3">
-               <table class="table table-condensed">
+            <div class="col-md-4">
+               <table class="table table-condensed table-bordered">
                   <thead>
-                     <th>#</th>
-                     <th>pH</th>
+                     <tr>
+                        <th colspan="2">Sensores</th>
+                     </tr>
                   </thead>
                   <tbody>
-                     <tr>
-                        <td>01/01/2015 15:30</td>
-                        <td>7.0</td>
+                     <tr id="env_temp_line">
+                        <td>Temperatura Ambiente (&deg;C)</td>
+                        <td><span id="env_temp">NA</span></td>
                      </tr>
-                     <tr>
-                        <td>02/01/2015 10:30</td>
-                        <td>7.0</td>
+                     <tr id="env_humidity_line">
+                        <td>Umidade Ambiente (%)</td>
+                        <td><span id="env_humidity">NA</span></td>
                      </tr>
-                     <tr>
-                        <td>03/01/2015 17:30</td>
-                        <td>7.0</td>
+                     <tr id="solution_temp_line">
+                        <td>Temperatura Solu&ccedil;&atilde;o (&deg;C)</td>
+                        <td><span id="solution_temp">NA</span></td>
                      </tr>
-                     <tr>
-                        <td>05/01/2015 15:30</td>
-                        <td>7.0</td>
+                     <tr id="solution_ph_line">
+                        <td>pH Solu&ccedil;&atilde;o</td>
+                        <td><span id="solution_ph">NA</span></td>
+                     </tr>
+                     <tr id="substrate_humidity_line">
+                        <td>Umidade Substrato (%)</td>
+                        <td><span id="substrate_humidity">NA</span></td>
                      </tr>
                   </tbody>
                </table>
 
-               <table class="table table-condensed">
-                  <tr>
-                     <td>Set Point pH</td>
-                     <td><span id="setpoint_ph"><input type="text" size="2"></span></td>
-                  </tr>
-                  <tr>
-                     <td colspan="2">
-                        <button type="button" class="btn btn-primary">Efetuar Leitura pH</button>
-                     </td>
-                  </tr>
+               <table class="table table-condensed table-bordered">
+                  <thead>
+                     <tr>
+                        <th colspan="2">Par&acirc;metros de Controle</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr id="substrate_humidity_set_point_line">
+                        <td>SP Umidade Substrato (%)</td>
+                        <td>
+                           <input type="text" size="3" id="substrate_humidity_set_point" />
+                           <button id="substrate_humidity_set_point_button">OK</button>
+                        </td>
+                     </tr>
+                     <tr id="solution_ph_set_point_line">
+                        <td>SP pH</td>
+                        <td>
+                           <input type="text" size="3" id="solution_ph_set_point" />
+                           <button id="solution_ph_set_point_button">OK</button>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+
+               <table class="table table-condensed table-bordered">
+                  <thead>
+                     <tr>
+                        <th colspan="2">Atuadores</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr id="substrate_humidity_pump_line">
+                        <td>Bomba Solu&ccedil;&atilde;o</td>
+                        <td><span id="substrate_humidity_pump">NA</span></td>
+                     </tr>
+                     <tr id="ph_up_pump_line">
+                        <td>Bomba pH Up</td>
+                        <td><span id="ph_up_pump">NA</span></td>
+                     </tr>
+                     <tr id="ph_down_pump_line">
+                        <td>Bomba pH Down</td>
+                        <td><span id="ph_down_pump">NA</span></td>
+                     </tr>
+                  </tbody>
                </table>
             </div>
-            <div class="col-md-4">
-               <div id="chartContainer3" style="height: 300px; width:100%;"></div>
+
+            <div class="col-md-8">
+               <div class="container-fluid">
+                  <div class="row">
+                     <div id="chart_table" style="height: 430px; width:100%;"></div>
+                  </div>
+                  <div class="row">
+                     <input class="btn btn-default" type="button" value="Ligar Bomba Umidade Solu&ccedil;&atilde;o">
+                     <input class="btn btn-default" type="button" value="Ligar Bomba pH Up">
+                     <input class="btn btn-default" type="button" value="Ligar Bomba pH Down">
+                     <input class="btn btn-default" type="button" value="Efetuar leitura de pH">
+                  </div>
             </div>
          </div>
       </div>
 
 
 
-
-
-
-
-      
-
-      <script>AUTOBAHN_DEBUG = true;</script>
+     <script>AUTOBAHN_DEBUG = true;</script>
       <script src="http://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
+
       <script src="canvasjs.min.js"></script>
 
-      <script>
-      var dps = []; // dataPoints
+      <script language="javascript">
+         $(document).ready(function() {
+            var data_points = [];
 
-      var chart = new CanvasJS.Chart("chartContainer",{
-         title :{
-            text: "Live Random Data"
-         },       
-         data: [{
-            type: "line",
-            dataPoints: dps 
-         }]
-      });
-
-      var chart2 = new CanvasJS.Chart("chartContainer2",{
-         title :{
-            text: "Live Random Data"
-         },       
-         data: [{
-            type: "line",
-            dataPoints: dps 
-         }]
-      });
-
-      var chart3 = new CanvasJS.Chart("chartContainer3",{
-         title :{
-            text: "Live Random Data"
-         },       
-         data: [{
-            type: "line",
-            dataPoints: dps 
-         }]
-      });
-
-      var xVal = 0;
-      var yVal = 100;   
-      var updateInterval = 100;
-      var dataLength = 500; // number of dataPoints visible at any point
-
-      var updateChart = function (x_val, y_val) {
-         // count = count || 1;
-         // // count is number of times loop runs to generate random dataPoints.
-         
-         // for (var j = 0; j < count; j++) {   
-         //    yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
-            dps.push({
-               x: x_val,
-               y: y_val
-            });
-         //    xVal++;
-         // };
-         if (dps.length > dataLength)
-         {
-            dps.shift();            
-         }
-         
-         chart.render();  
-         chart2.render();   
-         chart3.render();      
-
-      };
-
-         // generates first set of dataPoints
-         updateChart(0, 0); 
-
-         // the URL of the WAMP Router (Crossbar.io)
-         //
-         var wsuri;
-         if (document.location.origin == "file://") {
-            wsuri = "ws://127.0.0.1:8080/ws";
-         } else {
-            wsuri = (document.location.protocol === "http:" ? "ws:" : "wss:") + "//" +
-                        document.location.host + "/ws";
-         }
-
-         // the WAMP connection to the Router
-         //
-         var connection = new autobahn.Connection({
-            url: wsuri,
-            realm: "realm1"
-         });
-
-         // fired when connection is established and session attached
-         //
-         connection.onopen = function (session, details) {
-
-            console.log("Connected");
-            // SUBSCRIBE to a topic and receive events
-            //
-            function on_counter (args) {
-               var counter = args[0];
-               console.log("on_counter() event received with counter " + counter);
-            }
-            session.subscribe('com.example.oncounter', on_counter).then(
-               function (sub) {
-                  console.log('subscribed to topic');
+            var chart_table = new CanvasJS.Chart("chart_table", {
+               zoomEnabled: true,
+               axisX: {
+                  title: "Hora",
+                  gridThickness: 1,
+                  valueFormatString: "HH:mm:ss"
                },
-               function (err) {
-                  console.log('failed to subscribe to topic', err);
+               axisY: {
+                  title: "Umidade (%)",
+                  gridThickness: 1,
+                  stripLines: [{
+                     value: 60,
+                     color:"#FF0000"
+                  }]
+               },
+               data: [{
+                  type: "spline",
+                  xValueType: "dateTime",
+                  dataPoints: data_points
+               }]
+            });
+
+            var update_chart = function(chart, x_val, y_val) {
+               var dataLength = 10 // number of dataPoints visible at any point
+               data_points.push({
+                  x: new Date(),
+                  y: y_val
+               });
+               if(data_points.length > dataLength) {
+                  data_points.shift();
                }
-            );
+               chart.render();
+            };
 
+            var wsuri;
+            if(document.location.origin === "file://") {
+               wsuri = "ws://127.0.0.1:8080/ws";
+            } else {
+               wsuri = (document.location.protocol === "http:" ? "ws:" : "wss:") + "//" +
+                        document.location.host + "/ws";
+            }
 
-         };
+            var connection = new autobahn.Connection({
+               url: wsuri,
+               realm: "realm1"
+            });
 
-         // var t1, t2;
-         // fired when connection was lost (or could not be established)
-         //
-         connection.onclose = function (reason, details) {
-            console.log("Connection lost: " + reason);
-            // if (t1) {
-            //    clearInterval(t1);
-            //    t1 = null;
-            // }
-            // if (t2) {
-            //    clearInterval(t2);
-            //    t2 = null;
-            // }
-         }
+            // fired when connection is established and session attached
+            connection.onopen = function (session, details) {
+               // $("#substrate_humidity_set_point_button").click(function() {
+               //    var set_point = $("#substrate_humidity_set_point").val();
+               //    system_status.substrate_humidity_set_point = parseFloat(set_point);
 
+               //    session.publish('com.ebbandflow.onwrite', [{
+               //       'set_point': set_point
+               //    }]);
+               // })
 
-         // now actually open the connection
-         //
-         connection.open();
+               function on_read(args) {
+                  // Executed when data is received from the plant
+                  var data = args[0];
+                  console.log("on_read() event received with data: " + data);
+                  data_reading = JSON.parse(data)
 
+                  // Actuators status
+                  if('substrate_humidity_pump' in data_reading) {
+                     $("#substrate_humidity_pump").html(data_reading.substrate_humidity_pump);
+                     if(data_reading.substrate_humidity_pump === "ON") {
+                        $("#substrate_humidity_pump_line").toggleClass("success", true);
+                     }
+                  }
+                  if('ph_up_pump' in data_reading) {
+                     $("#ph_up_pump").html(data_reading.ph_up_pump);
+                     if(data_reading.ph_up_pump === "ON") {
+                        $("#ph_up_pump_line").toggleClass("success", true);
+                     }
+                  }
+                  if('ph_down_pump' in data_reading) {
+                     $("#ph_down_pump").html(data_reading.ph_down_pump);
+                     if(data_reading.ph_down_pump === "ON") {
+                        $("#ph_down_pump_line").toggleClass("success", true);
+                     }
+                  }
+
+                  // Sensor values
+                  values_to_read = [
+                     'env_temp', 'env_humidity', 'solution_temp',
+                     'solution_ph', 'substrate_humidity'
+                  ]
+                  for(var i = 0; i < values_to_read.length; i++) {
+                     value_key = values_to_read[i];
+                     if(value_key in data_reading) {
+                       $('#' + value_key).html(data_reading[value_key]);
+                     }
+                  }
+
+                  // Update chart
+                  if('substrate_humidity' in data_reading) {
+                     update_chart(chart_table, new Date(), data_reading.substrate_humidity);
+                  }
+               }
+
+               session.subscribe('com.ebbandflow.onread', on_read).then(
+                  function (sub) {
+                     console.log('subscribed to topic');
+                  },
+                  function (err) {
+                     console.log('failed to subscribe to topic', err);
+                  }
+               );
+            };
+
+            // fired when connection was lost (or could not be established)
+            connection.onclose = function (reason, details) {
+               console.log("Connection lost: " + reason);
+            }
+
+            // now actually open the connection
+            connection.open();
+         });
       </script>
 
    </body>

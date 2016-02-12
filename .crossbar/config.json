@@ -48,7 +48,7 @@
          "components": [
             {
                "type": "class",
-               "classname": "hello.AppSession",
+               "classname": "ebbandflow.AppSession",
                "realm": "realm1",
                "transport": {
                   "type": "websocket",
