@@ -66,14 +66,14 @@
                         <td>SP Umidade Substrato (%)</td>
                         <td>
                            <input type="text" size="3" id="substrate_humidity_set_point" />
-                           <button id="substrate_humidity_set_point_button">OK</button>
+                           <button id="action_solution_humidity_set_point">OK</button>
                         </td>
                      </tr>
                      <tr id="solution_ph_set_point_line">
                         <td>SP pH</td>
                         <td>
                            <input type="text" size="3" id="solution_ph_set_point" />
-                           <button id="solution_ph_set_point_button">OK</button>
+                           <button id="action_solution_ph_set_point">OK</button>
                         </td>
                      </tr>
                   </tbody>
@@ -108,57 +108,105 @@
                      <div id="chart_table" style="height: 430px; width:100%;"></div>
                   </div>
                   <div class="row">
-                     <input class="btn btn-default" type="button" value="Ligar Bomba Umidade Solu&ccedil;&atilde;o">
-                     <input class="btn btn-default" type="button" value="Ligar Bomba pH Up">
-                     <input class="btn btn-default" type="button" value="Ligar Bomba pH Down">
-                     <input class="btn btn-default" type="button" value="Efetuar leitura de pH">
+                     <input class="btn btn-default" type="button" id="action_solution_pump" value="Ligar Bomba Umidade Solu&ccedil;&atilde;o">
+                     <input class="btn btn-default" type="button" id="action_ph_up_pump" value="Ligar Bomba pH Up">
+                     <input class="btn btn-default" type="button" id="action_ph_down_pump" value="Ligar Bomba pH Down">
+                     <input class="btn btn-default" type="button" id="action_ph_read" value="Efetuar leitura de pH">
                   </div>
             </div>
          </div>
       </div>
 
-
-
-     <script>AUTOBAHN_DEBUG = true;</script>
+      <script>AUTOBAHN_DEBUG = true;</script>
       <script src="http://autobahn.s3.amazonaws.com/autobahnjs/latest/autobahn.min.jgz"></script>
-
       <script src="canvasjs.min.js"></script>
-
       <script language="javascript">
          $(document).ready(function() {
-            var data_points = [];
+            var system_status = {
+               // Initial system status
+               substrate_humidity_set_point: 0.0,
+               solution_ph_set_point: 7.0,
+               env_temp: '-',
+               env_humidity: '-',
+               solution_temp: '-',
+               solution_ph: '-',
+               solution_ph_data: [],
+               substrate_humidity: '-',
+               substrate_humidity_data: [],
+               substrate_humidity_pump: '-',
+               ph_up_pump: '-',
+               ph_down_pump: '-'
+            };
 
             var chart_table = new CanvasJS.Chart("chart_table", {
                zoomEnabled: true,
                axisX: {
-                  title: "Hora",
                   gridThickness: 1,
-                  valueFormatString: "HH:mm:ss"
+                  valueFormatString: "HH:mm:ss",
                },
                axisY: {
                   title: "Umidade (%)",
                   gridThickness: 1,
                   stripLines: [{
-                     value: 60,
+                     value: system_status.substrate_humidity_set_point,
                      color:"#FF0000"
-                  }]
+                  }],
+                  minimum: 0,
+                  maximum: 100
                },
-               data: [{
-                  type: "spline",
-                  xValueType: "dateTime",
-                  dataPoints: data_points
-               }]
+               axisY2: {
+                  title: "pH",
+                  gridThickness: 1,
+                  stripLines: [{
+                     value: system_status.solution_ph_set_point,
+                     color:"#00FF00"
+                  }],
+                  minimum: 0,
+                  maximum: 14
+               },
+               legend: {
+                  dockInsidePlotArea: true,
+                  horizontalAlign: "right",
+                  verticalAlign: "bottom",
+                  fontSize: 12
+               },
+               data: [
+                  {
+                     showInLegend: true,
+                     legendText: "Umidade do Substrato (%)",
+                     type: "spline",
+                     xValueType: "dateTime",
+                     dataPoints: system_status.substrate_humidity_data
+                  },
+                  {
+                     showInLegend: true,
+                     legendText: "pH",
+                     type: "spline",
+                     axisYType: "secondary",
+                     xValueType: "dateTime",
+                     dataPoints: system_status.solution_ph_data,
+                  }
+               ]
             });
 
-            var update_chart = function(chart, x_val, y_val) {
+            var update_chart = function(chart, x_val, system_status) {
                var dataLength = 10 // number of dataPoints visible at any point
-               data_points.push({
-                  x: new Date(),
-                  y: y_val
+               system_status.substrate_humidity_data.push({
+                  x: x_val,
+                  y: system_status.substrate_humidity
                });
-               if(data_points.length > dataLength) {
-                  data_points.shift();
+               if(system_status.substrate_humidity_data.length > dataLength) {
+                  system_status.substrate_humidity_data.shift();
                }
+
+               system_status.solution_ph_data.push({
+                  x: x_val,
+                  y: system_status.solution_ph
+               });
+               if(system_status.solution_ph_data.length > dataLength) {
+                  system_status.solution_ph_data.shift();
+               }
+
                chart.render();
             };
 
@@ -177,14 +225,38 @@
 
             // fired when connection is established and session attached
             connection.onopen = function (session, details) {
-               // $("#substrate_humidity_set_point_button").click(function() {
-               //    var set_point = $("#substrate_humidity_set_point").val();
-               //    system_status.substrate_humidity_set_point = parseFloat(set_point);
+               substrate_humidity_set_point = 0;
 
+               // Button actions
+               $("#action_solution_humidity_set_point").click(function() {
+                  var substrate_humidity_set_point = $("#substrate_humidity_set_point").val();
+                  system_status.substrate_humidity_set_point = parseFloat(substrate_humidity_set_point);
+                  chart_table.options.axisY.stripLines[0].value = system_status.substrate_humidity_set_point;
+                  chart_table.render();
+
+                     // value: system_status['substrate_humidity_set_point']
                //    session.publish('com.ebbandflow.onwrite', [{
                //       'set_point': set_point
                //    }]);
-               // })
+               });
+               $("#action_solution_ph_set_point").click(function() {
+                  var solution_ph_set_point = $("#solution_ph_set_point").val();
+                  system_status.solution_ph_set_point = parseFloat(solution_ph_set_point);
+                  chart_table.options.axisY2.stripLines[0].value = system_status.solution_ph_set_point;
+                  chart_table.render();
+               });
+               $('#action_solution_pump').click(function() {
+                  alert('Mudar status bomba de agua da solução');
+               });
+               $('#action_ph_up_pump').click(function() {
+                  alert('Mudar status bomba de pH up');
+               });
+               $('#action_ph_down_pump').click(function() {
+                  alert('Mudar status bomba de ph down');
+               });
+               $('#action_ph_read').click(function() {
+                  alert('Ler pH');
+               });
 
                function on_read(args) {
                   // Executed when data is received from the plant
@@ -220,13 +292,14 @@
                   for(var i = 0; i < values_to_read.length; i++) {
                      value_key = values_to_read[i];
                      if(value_key in data_reading) {
-                       $('#' + value_key).html(data_reading[value_key]);
+                        system_status[value_key] = data_reading[value_key];
+                        $('#' + value_key).html(data_reading[value_key]);
                      }
                   }
 
                   // Update chart
                   if('substrate_humidity' in data_reading) {
-                     update_chart(chart_table, new Date(), data_reading.substrate_humidity);
+                     update_chart(chart_table, new Date(), system_status);
                   }
                }
 

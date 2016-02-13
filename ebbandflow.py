@@ -36,11 +36,11 @@ class AppSession(ApplicationSession):
                 'ph_up_pump': 'ON',
                 'ph_down_pump': 'OFF',
                 'substrate_humidity_pump': 'OFF',
-                'env_temp': random.randint(20,25),
+                'env_temp': random.randint(20, 25),
                 'env_humidity': random.randint(50, 70),
-                'solution_temp': random.randint(15,25),
-                'solution_ph': random.randint(1,7),
-                'substrate_humidity': random.randint(50,70),
+                'solution_temp': random.randint(15, 25),
+                'solution_ph': random.randint(60, 80) / 10.0,
+                'substrate_humidity': random.randint(50, 70),
             }
 
             yield sleep(5)
