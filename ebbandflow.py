@@ -3,44 +3,39 @@ from twisted.logger import Logger
 
 from autobahn.twisted.util import sleep
 from autobahn.twisted.wamp import ApplicationSession
-from autobahn.wamp.exception import ApplicationError
-import serial
 
-import random
-import json
+from hydroponic_plant import HydroponicPlan
 
 
 class AppSession(ApplicationSession):
 
-    log = Logger()
-
     @inlineCallbacks
     def onJoin(self, details):
+        hydroponic_plant = HydroponicPlan()
+        status = hydroponic_plant.status
+        yield self.publish('com.ebbandflow.onread', status)
+
 
         def onwrite(msg):
-            self.log.info("event for 'onwrite' received: {msg}", msg=msg)
+            # self.log.info("event for 'onwrite' received: {msg}", msg=msg)
+
+            substrate_humidity_set_point = msg.get('substrate_humidity_set_point', None)
+            if substrate_humidity_set_point:
+                hydroponic_plant.substrate_humidity_set_point = int(substrate_humidity_set_point)
+
+            substrate_humidity_pump = msg.get('substrate_humidity_pump', None)
+            if substrate_humidity_pump is not None:
+                hydroponic_plant.substrate_humidity_pump = int(substrate_humidity_pump)
+
+            operation_mode = msg.get('operation_mode', None)
+            if operation_mode and operation_mode in ['auto', 'manual']:
+                hydroponic_plant.operation_mode = operation_mode
 
         yield self.subscribe(onwrite, 'com.ebbandflow.onwrite')
         self.log.info("subscribed to topic 'onwrite'")
 
-        read_result = ''
-        # ser = serial.Serial('/dev/ttyUSB0', 9600)
         while True:
-            yield self.publish('com.ebbandflow.onread', json.dumps(read_result))
-            self.log.info('published to "onread" with result {read_result}',
-                read_result=read_result)
-            # read_result = ser.readline()
-
-            read_result = {
-                'substrate_humidity': random.randint(50,70),
-                'ph_up_pump': 'ON',
-                'ph_down_pump': 'OFF',
-                'substrate_humidity_pump': 'OFF',
-                'env_temp': random.randint(20, 25),
-                'env_humidity': random.randint(50, 70),
-                'solution_temp': random.randint(15, 25),
-                'solution_ph': random.randint(60, 80) / 10.0,
-                'substrate_humidity': random.randint(50, 70),
-            }
-
+            status = hydroponic_plant.status
+            self.log.info("hydroponic plant status: {0}".format(status))
+            yield self.publish('com.ebbandflow.onread', status)
             yield sleep(5)
