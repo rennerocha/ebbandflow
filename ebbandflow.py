@@ -38,4 +38,4 @@ class AppSession(ApplicationSession):
             status = hydroponic_plant.status
             self.log.info("hydroponic plant status: {0}".format(status))
             yield self.publish('com.ebbandflow.onread', status)
-            yield sleep(5)
+            yield sleep(60)
