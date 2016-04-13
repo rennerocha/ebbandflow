@@ -1,4 +1,5 @@
 import pyfirmata
+import models
 
 
 class HydroponicPlan(object):
@@ -25,13 +26,15 @@ class HydroponicPlan(object):
 
     @property
     def status(self):
-        return {
+        current_status = {
             'operation_mode': self.operation_mode,
             'substrate_humidity': self.substrate_humidity,
             'solution_ph': self.solution_ph,
             'substrate_humidity_pump': self.substrate_humidity_pump,
             'substrate_humidity_set_point': self.substrate_humidity_set_point
         }
+        models.PlantStatus(**current_status).save()  # Store status every time it is requested
+        return current_status
 
     @property
     def substrate_humidity(self):
