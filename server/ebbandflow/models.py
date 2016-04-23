@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 import datetime
 import os
 import peewee
 from playhouse.shortcuts import model_to_dict
 
 
-database_path = '/home/rrocha/projects/feagri/ebbandflow.db'
+database_path = "/home/rrocha/projects/feagri/server/ebbandflow.db"
 database = peewee.SqliteDatabase(database_path)
 
 
@@ -33,3 +32,8 @@ class StatusPlanta(BaseModel):
     ph_solucao = peewee.CharField()
     ph_set_point = peewee.CharField()
     created_date = peewee.DateTimeField(default=datetime.datetime.now)
+
+
+database.connect()
+database.create_tables([StatusPlanta, ], True)
+

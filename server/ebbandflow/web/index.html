@@ -3,17 +3,15 @@
    <head>
       <title>Ebb and Flow - Hydroponics</title>
 
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+      <link rel="stylesheet" href="bootstrap.min.css">
 
       <!-- Latest compiled and minified CSS -->
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+      <link rel="stylesheet" href="bootstrap-theme.min.css">
 
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.js"></script>
 
       <!-- Optional theme -->
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-
-      <!-- Latest compiled and minified JavaScript -->
+      <script src="bootstrap.min.js"></script>
 
    </head>
    <body>
@@ -24,7 +22,7 @@
             </div>
          </div>
          <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
                <table class="table table-condensed table-bordered">
                   <thead>
                      <tr>
@@ -32,18 +30,6 @@
                      </tr>
                   </thead>
                   <tbody>
-<!--                      <tr id="env_temp_line">
-                        <td>Temperatura Ambiente (&deg;C)</td>
-                        <td><span id="env_temp">NA</span></td>
-                     </tr>
-                     <tr id="env_humidity_line">
-                        <td>Umidade Ambiente (%)</td>
-                        <td><span id="env_humidity">NA</span></td>
-                     </tr>
-                     <tr id="solution_temp_line">
-                        <td>Temperatura Solu&ccedil;&atilde;o (&deg;C)</td>
-                        <td><span id="solution_temp">NA</span></td>
-                     </tr>-->
                      <tr id="solution_ph_line">
                         <td>pH Solu&ccedil;&atilde;o</td>
                         <td><span id="solution_ph"></span></td>
@@ -58,31 +44,32 @@
                <table class="table table-condensed table-bordered">
                   <thead>
                      <tr>
-                        <th colspan="2">Par&acirc;metros de Controle</th>
+                        <th colspan="2">Set Point</th>
                      </tr>
                   </thead>
                   <tbody>
                      <tr id="substrate_humidity_set_point_line">
-                        <td>SP Umidade Substrato (%)</td>
+                        <td>Umidade Substrato (%)</td>
                         <td>
                            <input type="text" size="3" id="substrate_humidity_set_point" />
                            <button id="action_solution_humidity_set_point">OK</button>
                         </td>
                      </tr>
-<!--                      <tr id="solution_ph_set_point_line">
-                        <td>SP pH</td>
+                     <tr id="solution_ph_set_point_line">
+                        <td>pH</td>
                         <td>
                            <input type="text" size="3" id="solution_ph_set_point" />
                            <button id="action_solution_ph_set_point">OK</button>
                         </td>
-                     </tr> -->
+                     </tr>
                      <tr id="mode_line">
-                        <td >Opera&ccedil;&atilde;o</td>
-                        <td>
-                           <input type="radio" name="operation_mode" id="operation_mode_auto" value="auto" />
+                        <td>Opera&ccedil;&atilde;o
+                        <input type="radio" name="operation_mode" id="operation_mode_auto" value="auto" />
                            <label for="operation_mode_auto">Autom&aacute;tico</label><br/>
                            <input type="radio" name="operation_mode" id="operation_mode_manual" value="manual" />
-                           <label for="operation_mode_manual">Manual</label>
+                           <label for="operation_mode_manual">Manual</label></td>
+                        <td>
+                           
                         </td>
                      </tr>
                   </tbody>

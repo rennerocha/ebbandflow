@@ -15,7 +15,6 @@ class AppSession(ApplicationSession):
         status = hydroponic_plant.status
         yield self.publish('com.ebbandflow.onread', status)
 
-
         def onwrite(msg):
             # self.log.info("event for 'onwrite' received: {msg}", msg=msg)
 
